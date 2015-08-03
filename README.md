@@ -1,15 +1,14 @@
 # AliyunOpenSearch
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/aliyun_open_search`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+对Aliyun Open Search API 进行封装.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'aliyun_open_search'
+gem 'aliyun_open_search', require: false
+
 ```
 
 And then execute:
@@ -22,7 +21,55 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### 准备工作
+#### 定义 3 个环境变量
+
+```ruby
+
+ACCESS_KEY_ID: "your access_key_id"
+ACCESS_KEY_SECRET: "your access_key_secret"
+
+OPEN_SEARCH_HOST: http://opensearch-cn-hangzhou.aliyuncs.com
+
+```
+
+### 数据处理API
+
+```
+# app_name 是阿里云 应用名称
+# params 的内容按照阿里云文档中的约定组织
+require "aliyun_open_search"
+
+params =  {
+            action: :push,
+            table_name: :cars,
+            items: [
+              {
+                "cmd": "update",
+                "timestamp": 1_420_070_400_010,
+                "fields": {
+                  "id": "121139313135",
+                  "styl_name": "aodi",
+                  "acquirer_id": "1"
+                }
+              },
+              {
+                "cmd": "update",
+                "timestamp": 1_420_070_400_020,
+                "fields": {
+                  "id": "1211391233136",
+                  "styl_name": "baoma",
+                  "acquirer_id": "1"
+                }
+              }
+            ]
+          }
+
+response = AliyunOpenSearch::Syncs.new(app_name).execute(params)
+response_body = JSON.load(response.body)
+
+```
+
 
 ## Development
 

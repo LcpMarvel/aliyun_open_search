@@ -24,6 +24,10 @@ module AliyunOpenSearch
       URI((special_base_url || base_url) + "?" + encoded_params)
     end
 
+    def self.request_method
+      "GET"
+    end
+
     def self.signature(params)
       params =  params.sort_by { |k, _v| k.to_s }
                 .map do |arr|
@@ -40,7 +44,7 @@ module AliyunOpenSearch
         OpenSSL::HMAC.digest(
           OpenSSL::Digest.new("sha1"),
           "#{ENV["ACCESS_KEY_SECRET"]}&",
-          "POST" + "&" + CGI.escape("/") + "&" + CGI.escape(params)
+          request_method + "&" + CGI.escape("/") + "&" + CGI.escape(params)
         )
       ).strip
     end
@@ -50,6 +54,18 @@ module AliyunOpenSearch
     def signature_nonce
       # 用户在不同请求间要使用不同的随机数值，建议使用13位毫秒时间戳+4位随机数
       (Time.now.to_f.round(3) * 1000).to_i.to_s + (1000..9999).to_a.sample.to_s
+    end
+
+    def self.format_params(params)
+      {}.tap do |hash|
+        params.map do |key, value|
+          hash[key.to_s] =  if value.is_a?(Array)
+                              JSON.generate(value)
+                            else
+                              value.to_s
+                            end
+        end
+      end
     end
   end
 end

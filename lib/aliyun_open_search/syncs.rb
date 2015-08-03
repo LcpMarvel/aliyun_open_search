@@ -6,6 +6,10 @@ module AliyunOpenSearch
       @base_url = "#{ENV["OPEN_SEARCH_HOST"]}/index/doc/#{app_name}"
     end
 
+    def self.request_method
+      "POST"
+    end
+
     def execute(custom_params)
       formatted_custom_params = {}.tap do |hash|
         custom_params.map do |key, value|
@@ -16,7 +20,7 @@ module AliyunOpenSearch
                             end
         end
       end
-      binding.pry
+
       params_with_signature = basic_params.merge(
         "Signature" =>  self.class
                             .signature(basic_params.merge(formatted_custom_params))
