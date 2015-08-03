@@ -7,7 +7,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'aliyun_open_search', require: false
+gem 'aliyun_open_search', github: "LcpMarvel/aliyun_open_search", require: false
 
 ```
 
@@ -29,7 +29,7 @@ Or install it yourself as:
 ACCESS_KEY_ID: "your access_key_id"
 ACCESS_KEY_SECRET: "your access_key_secret"
 
-OPEN_SEARCH_HOST: http://opensearch-cn-hangzhou.aliyuncs.com
+OPEN_SEARCH_HOST: "http://opensearch-cn-hangzhou.aliyuncs.com"
 
 ```
 
@@ -67,6 +67,25 @@ params =  {
 
 response = AliyunOpenSearch::Syncs.new(app_name).execute(params)
 response_body = JSON.load(response.body)
+
+```
+
+### 搜索
+
+```ruby
+require "aliyun_open_search"
+
+# index_names 是阿里云 应用名称, 可以多个
+# params 的内容按照阿里云文档中的约定组织
+
+params =  {
+            query: "config=start:0,hit:10,format=fulljson&&query=default:'的'&&filter=create_timestamp>1423000000&&sort=+type;-RANK&fetch_fields=id;title;body;url;type;create_timestamp",
+            first_formula_name: "first_bbs",
+            formula: "second_bbs",
+            summary: "summary_snipped:1,summary_field:title,summary_element:high,summary_len:32,summary_ellipsis:...;summary_snipped:2,summary_field:body,summary_element:high,summary_len:60,summary_ellipsis:..."
+          }
+
+AliyunOpenSearch::Search.new("test", "test2", "test3").execute(params)
 
 ```
 
