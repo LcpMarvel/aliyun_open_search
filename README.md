@@ -7,7 +7,11 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'aliyun_open_search', github: "LcpMarvel/aliyun_open_search", require: false
+gem 'aliyun_open_search'
+
+# or
+
+gem 'aliyun_open_search', github: "LcpMarvel/aliyun_open_search"
 
 ```
 
@@ -35,7 +39,7 @@ OPEN_SEARCH_HOST: "http://opensearch-cn-hangzhou.aliyuncs.com"
 
 ### 数据处理API
 
-```
+```ruby
 # app_name 是阿里云 应用名称
 # params 的内容按照阿里云文档中的约定组织
 require "aliyun_open_search"
@@ -86,6 +90,36 @@ params =  {
           }
 
 AliyunOpenSearch::Search.new("test", "test2", "test3").execute(params)
+
+```
+
+### 签名
+##### 你可以直接使用封装好的方法进行签名(文档读得好累)
+
+```ruby
+  
+  AliyunOpenSearch.request_method = "POST" # 默认是 GET, 大写
+
+  # custom_params 的内容按照阿里云文档中的约定组织
+  custom_params = {
+    "action" => "push",
+    "table_name" => "cars",
+    "items" => [
+      {
+        "cmd": "update",
+        "timestamp": 1_420_070_400_010,
+        "fields": {
+          "id": "121139313135",
+          "styl_name": "aodi",
+          "acquirer_id": "1"
+        }
+      }
+    ].to_json
+  }
+
+  AliyunOpenSearch::Base.signature(
+    AliyunOpenSearch::Base.new.basic_params.merge!(custom_params)
+  )
 
 ```
 
