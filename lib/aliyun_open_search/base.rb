@@ -18,7 +18,7 @@ module AliyunOpenSearch
 
     def uri(special_base_url = nil, params)
       encoded_params = params.inject([]) do |arr, (k, v)|
-        arr << "#{k}=#{CGI.escape(v)}"
+        arr << "#{k}=#{Base.escape(v)}"
       end.join("&")
 
       URI((special_base_url || base_url) + "?" + encoded_params)
@@ -37,14 +37,14 @@ module AliyunOpenSearch
                 arr[1].to_json
               end
 
-        "#{arr[0]}=#{CGI.escape(str)}"
+        "#{arr[0]}=#{Base.escape(str)}"
       end.join("&")
 
       Base64.encode64(
         OpenSSL::HMAC.digest(
           OpenSSL::Digest.new("sha1"),
           "#{ENV["ACCESS_KEY_SECRET"]}&",
-          request_method + "&" + CGI.escape("/") + "&" + CGI.escape(params)
+          request_method + "&" + CGI.escape("/") + "&" + Base.escape(params)
         )
       ).strip
     end
@@ -66,6 +66,16 @@ module AliyunOpenSearch
                             end
         end
       end
+    end
+
+    def self.escape(str)
+      CGI.escape(str).gsub(/\!/, "%21")
+                     .gsub(/\'/, "%27")
+                     .gsub(/\(/, "%28")
+                     .gsub(/\)/, "%29")
+                     .gsub(/\*/, "%2A")
+                     .gsub(/\+/, "%20")
+                     .gsub(/%7E/, "~")
     end
   end
 end
