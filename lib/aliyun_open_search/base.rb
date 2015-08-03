@@ -5,6 +5,10 @@ module AliyunOpenSearch
   class Base
     attr_reader :basic_params, :base_url
 
+    class << self
+      attr_accessor :request_method
+    end
+
     def initialize
       @basic_params = {
         "Version" => "v2",
@@ -25,7 +29,7 @@ module AliyunOpenSearch
     end
 
     def self.request_method
-      "GET"
+      @request_method ||= "GET"
     end
 
     def self.signature(params)
