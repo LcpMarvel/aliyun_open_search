@@ -90,6 +90,7 @@ params =  {
           }
 # 更多例子
 
+# 1. 
 # params = {
 #   query: [
 #     [
@@ -103,6 +104,25 @@ params =  {
 #     ].join(" OR "),
 # 
 #     "config=start:#{page},hit:#{params[:per_page]}"
+#   ],
+#   fetch_fields: :id
+# }
+
+# 2. 
+# start = per_page * (current_page - 1)
+# query = [
+#   "default:'#{@value}'",
+#   "configuration:'#{@value}'",
+#   "user_info:'#{@value}'",
+#   "authority_roles:'#{@value}'"
+# ].join(" OR ")
+
+# query = "query=(" + query + ") AND cars_company_id:'#{@company_id}'"
+
+# params = {
+#   query: [
+#     query,
+#     "config=start:#{start},hit:#{@per_page}"
 #   ],
 #   fetch_fields: :id
 # }
