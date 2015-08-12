@@ -67,7 +67,7 @@ module AliyunOpenSearch
       {}.tap do |hash|
         params.map do |key, value|
           hash[key.to_s] =  if value.is_a?(Array)
-                              JSON.generate(value)
+                              value.join("&&")
                             else
                               value.to_s
                             end
