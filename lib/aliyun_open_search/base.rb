@@ -25,7 +25,10 @@ module AliyunOpenSearch
         arr << "#{k}=#{Base.escape(v)}"
       end.join("&")
 
-      URI((special_base_url || base_url) + "?" + encoded_params)
+      url = (special_base_url || base_url) + "?" + encoded_params
+      Rails.logger.info url if defined?(Rails)
+
+      URI(url)
     end
 
     def self.request_method
