@@ -11,7 +11,7 @@ module AliyunOpenSearch
     end
 
     def execute(custom_params)
-      formatted_custom_params = Base.format_params(custom_params)
+      formatted_custom_params = Base.format_params(:post, custom_params)
 
       params_with_signature = basic_params.merge(
         "Signature" => Syncs.signature(basic_params.merge(formatted_custom_params))

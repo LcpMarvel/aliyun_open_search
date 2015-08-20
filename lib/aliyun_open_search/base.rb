@@ -10,14 +10,9 @@ module AliyunOpenSearch
     end
 
     def initialize
-      @basic_params = {
-        "Version" => "v2",
-        "AccessKeyId" => ENV.fetch("ACCESS_KEY_ID"),
-        "SignatureMethod" => "HMAC-SHA1",
-        "Timestamp" => Time.now.utc.iso8601,
-        "SignatureVersion" => "1.0",
-        "SignatureNonce" => signature_nonce
-      }
+      @basic_params = Base.basic_params
+
+      @base_url = "#{ENV["OPEN_SEARCH_HOST"]}/search"
     end
 
     def uri(special_base_url = nil, params)
@@ -56,18 +51,27 @@ module AliyunOpenSearch
       ).strip
     end
 
-    private
+    def self.basic_params
+      {
+        "Version" => "v2",
+        "AccessKeyId" => ENV.fetch("ACCESS_KEY_ID"),
+        "SignatureMethod" => "HMAC-SHA1",
+        "Timestamp" => Time.now.utc.iso8601,
+        "SignatureVersion" => "1.0",
+        "SignatureNonce" => signature_nonce
+      }
+    end
 
-    def signature_nonce
+    def self.signature_nonce
       # 用户在不同请求间要使用不同的随机数值，建议使用13位毫秒时间戳+4位随机数
       (Time.now.to_f.round(3) * 1000).to_i.to_s + (1000..9999).to_a.sample.to_s
     end
 
-    def self.format_params(params)
+    def self.format_params(method = :get, params)
       {}.tap do |hash|
         params.map do |key, value|
           hash[key.to_s] =  if value.is_a?(Array)
-                              value.join("&&")
+                              method == :get ? value.join("&&") : JSON.generate(value)
                             else
                               value.to_s
                             end
@@ -77,12 +81,12 @@ module AliyunOpenSearch
 
     def self.escape(str)
       CGI.escape(str).gsub(/\!/, "%21")
-                     .gsub(/\'/, "%27")
-                     .gsub(/\(/, "%28")
-                     .gsub(/\)/, "%29")
-                     .gsub(/\*/, "%2A")
-                     .gsub(/\+/, "%20")
-                     .gsub(/%7E/, "~")
+        .gsub(/\'/, "%27")
+        .gsub(/\(/, "%28")
+        .gsub(/\)/, "%29")
+        .gsub(/\*/, "%2A")
+        .gsub(/\+/, "%20")
+        .gsub(/%7E/, "~")
     end
   end
 end

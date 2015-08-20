@@ -65,6 +65,12 @@ params =  {
                   "styl_name": "baoma",
                   "acquirer_id": "1"
                 }
+              },
+              {
+                "cmd": "delete",
+                "fields": {
+                  "id": "3"
+                }
               }
             ]
           }
@@ -156,10 +162,41 @@ AliyunOpenSearch::Search.new("test", "test2", "test3").execute(params)
   }
 
   AliyunOpenSearch::Base.signature(
-    AliyunOpenSearch::Base.new.basic_params.merge!(custom_params)
+    AliyunOpenSearch::Base.basic_params.merge!(custom_params)
   )
 
 ```
+
+### 检索
+
+```ruby
+require "aliyun_open_search"
+
+scan_service = AliyunOpenSearch::Scan.new("test")
+scan_service = AliyunOpenSearch::Scan.new(["test", "test2"])
+
+# AliyunOpenSearch::Scan.new(
+#   ["test", "test2"], 
+
+# 配置: 
+#   query: "query=default:'abc'", # 默认所有
+#   hit: "400", # 默认500, 范围 0~500
+#   scroll: "1w", 
+#   # 用来表示scroll请求的有效期，默认时间单位为ms, 也可以用1m表示1min
+#   # 支持的时间单位包括：w=Week, d=Day, h=Hour, m=minute, s=second
+#   format: "xml" # 默认 JSON
+# )
+
+scan_service.execute # 获取第一页
+scan_service.result # 获取结果
+
+# 下一页
+scan_service.execute # 获取第二页
+scan_service.result # 获取结果
+
+
+```
+
 
 ### 测试
 ##### 大部分时候, 我们并不需要真正的发出请求, 需要mock掉
