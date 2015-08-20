@@ -11,7 +11,7 @@ describe AliyunOpenSearch::Base do
 
   context "AliyunOpenSearch::Base.new.signature_nonce" do
     it "generates a string which is 17 random numbers" do
-      expect(AliyunOpenSearch::Base.new.send(:signature_nonce).size).to eq 17
+      expect(AliyunOpenSearch::Base.send(:signature_nonce).size).to eq 17
     end
   end
 

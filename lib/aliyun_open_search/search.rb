@@ -6,7 +6,6 @@ module AliyunOpenSearch
       super()
 
       @index_names = index_names.join(";")
-      @base_url = "#{ENV["OPEN_SEARCH_HOST"]}/search"
     end
 
     def execute(custom_params)
