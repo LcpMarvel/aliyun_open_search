@@ -9,7 +9,7 @@ describe AliyunOpenSearch::Search do
 
   let(:index_name) { "test" }
 
-  context "AliyunOpenSearch::Syncs.new(app_name).execute(params)" do
+  context "AliyunOpenSearch::Search.new(app_name).execute(params)" do
     it "send request directly" do
       res = AliyunOpenSearch::Search.new(index_name).execute(params)
 
