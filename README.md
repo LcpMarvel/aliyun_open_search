@@ -197,6 +197,23 @@ scan_service.result # 获取结果
 
 ```
 
+### 下拉提示
+
+```ruby
+require "aliyun_open_search"
+
+# index_names 是阿里云应用名称，只能一个
+# params 的内容按照阿里云文档中的约定组织
+
+params =  {
+            query: "test",
+            suggest_name: "test_suggest",
+            hit: 10
+          }
+
+AliyunOpenSearch::Suggest.new("test_suggest").execute(params)
+
+```
 
 ### 测试
 ##### 大部分时候, 我们并不需要真正的发出请求, 需要mock掉
